@@ -4,6 +4,22 @@
     https://api.github.com/users/<your name>
 */
 
+
+let targetCard = document.querySelector('.cards');
+
+  import axios from 'axios';
+  axios.get('https://api.github.com/users/dougk11')
+  .then(res => {
+    console.log(res.data);
+    console.log('worked');
+    targetCard.appendChild(cardMaker(res.data))
+    
+  })
+  .catch(err => {
+    console.log(err);
+  })
+  
+
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -28,7 +44,64 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [
+    'tetondan',
+    'dustinmyers',
+    'justsml',
+    'luishrd',
+    'bigknell'
+];
+
+function cardMaker (object) {
+  let div = document.createElement('div');
+  let image1 = document.createElement('img');
+  let divSecond = document.createElement('div');
+  let header = document.createElement('h3');
+  let user = document.createElement('p');
+  let location = document.createElement('p');
+  let profile = document.createElement('p');
+  let followers = document.createElement('p');
+  let following = document.createElement('p');
+  let bio = document.createElement('p');
+
+  div.classList.add('card');
+  image1.src = (object['avatar_url']);
+  divSecond.classList.add('card-info');
+  header.classList.add('name');
+  user.classList.add('username');
+
+  header.textContent = object.name;
+  user.textContent = object.login;
+  location.textContent = `Location: ${object.location} `;
+  profile.innerHTML = `<a href=${object['html_url']}>${object['html_url']}</a>`;
+  followers.textContent = `Followers: ${object.followers}`;
+  following.textContent = `Following: ${object.following}`;
+  bio.textContent = `Bio: ${object.bio}`;
+
+  divSecond.appendChild(header);
+  divSecond.appendChild(user);
+  divSecond.appendChild(location);
+  divSecond.appendChild(profile);
+  divSecond.appendChild(followers);
+  divSecond.appendChild(following);
+  divSecond.appendChild(bio);
+
+  div.appendChild(image1);
+  div.appendChild(divSecond);
+  
+  return div;
+}
+
+followersArray.forEach(item => {
+  axios.get(`https://api.github.com/users/${item}`)
+    .then(res => {
+      targetCard.appendChild(cardMaker(res.data));
+    })
+    .catch(err =>{
+      console.log(err);
+    })
+})
+
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -52,9 +125,5 @@ const followersArray = [];
 
 /*
   List of LS Instructors Github username's:
-    tetondan
-    dustinmyers
-    justsml
-    luishrd
-    bigknell
+    
 */
